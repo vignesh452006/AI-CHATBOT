@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus AI Assistant</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & Babel for JSX -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+
+        .message-appear {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .typing-dot {
+            animation: blink 1.4s infinite both;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+            40% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Icons Component ---
+        const Icon = ({ name, size = 20, className = "" }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+            return <i data-lucide={name} className={`${className}`} style={{ width: size, height: size }}></i>;
+        };
+
+        const ChatApp = () => {
+            const [messages, setMessages] = useState([
+                { id: 1, role: 'bot', text: "Hello! I'm Nexus AI. I'm ready to help you build, code, or answer questions. How can I assist you today?", time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+            ]);
+            const [input, setInput] = useState('');
+            const [isTyping, setIsTyping] = useState(false);
+            const scrollRef = useRef(null);
+
+            // Auto Scroll logic
+            useEffect(() => {
+                scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+                lucide.createIcons();
+            }, [messages, isTyping]);
+
+            const simulateAIResponse = (userText) => {
+                setIsTyping(true);
+                
+                // Professional AI Logic Simulation
+                setTimeout(() => {
+                    let response = "";
+                    const lowInput = userText.toLowerCase();
+                    
+                    if (lowInput.includes("hello") || lowInput.includes("hi")) {
+                        response = "Greetings! How can I make your day more productive?";
+                    } else if (lowInput.includes("who are you")) {
+                        response = "I am a professional Generative AI interface built with React. I can process data, write code, and simulate complex conversations.";
+                    } else if (lowInput.includes("code")) {
+                        response = "I love coding! Here is a sample: \n\n`const AI = () => console.log('Neural Link Active');`";
+                    } else {
+                        response = "That's an interesting perspective. As an AI, I've analyzed your input and I suggest we explore that further. Is there a specific detail you'd like me to focus on?";
+                    }
+
+                    const newMessage = {
+                        id: Date.now(),
+                        role: 'bot',
+                        text: response,
+                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                    };
+                    setMessages(prev => [...prev, newMessage]);
+                    setIsTyping(false);
+                }, 1500);
+            };
+
+            const handleSend = (e) => {
+                e.preventDefault();
+                if (!input.trim()) return;
+
+                const userMsg = {
+                    id: Date.now(),
+                    role: 'user',
+                    text: input,
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+
+                setMessages(prev => [...prev, userMsg]);
+                setInput('');
+                simulateAIResponse(input);
+            };
+
+            const clearChat = () => {
+                if(confirm("Clear conversation history?")) {
+                    setMessages([messages[0]]);
+                }
+            };
+
+            return (
+                <div className="flex flex-col h-screen max-w-4xl mx-auto p-4 md:p-6">
+                    {/* Header */}
+                    <div className="bg-white border border-slate-200 rounded-t-3xl p-5 flex items-center justify-between shadow-sm">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-200">
+                                <Icon name="sparkles" className="text-white" />
+                            </div>
+                            <div>
+                                <h1 className="font-bold text-slate-800 text-lg leading-none">Nexus AI</h1>
+                                <div className="flex items-center gap-1.5 mt-1">
+                                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">System Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={clearChat}
+                            className="p-2 hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all rounded-lg"
+                        >
+                            <Icon name="trash-2" size={18} />
+                        </button>
+                    </div>
+
+                    {/* Chat Body */}
+                    <div className="flex-1 bg-white border-x border-slate-200 overflow-y-auto p-4 md:p-8 space-y-6">
+                        {messages.map((msg) => (
+                            <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} message-appear`}>
+                                <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                                        msg.role === 'user' ? 'bg-slate-800' : 'bg-indigo-100 text-indigo-600'
+                                    }`}>
+                                        <Icon name={msg.role === 'user' ? 'user' : 'bot'} size={16} />
+                                    </div>
+                                    <div>
+                                        <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                                            msg.role === 'user' 
+                                            ? 'bg-indigo-600 text-white rounded-tr-none' 
+                                            : 'bg-slate-100 text-slate-800 rounded-tl-none border border-slate-200'
+                                        }`}>
+                                            {msg.text}
+                                        </div>
+                                        <p className={`text-[10px] mt-1.5 text-slate-400 font-medium ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                                            {msg.time}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                        {isTyping && (
+                            <div className="flex justify-start message-appear">
+                                <div className="flex gap-3 items-center">
+                                    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                        <Icon name="bot" size={16} />
+                                    </div>
+                                    <div className="bg-slate-100 px-4 py-3 rounded-2xl rounded-tl-none border border-slate-200 flex gap-1">
+                                        <div className="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                                        <div className="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                                        <div className="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <div ref={scrollRef} />
+                    </div>
+
+                    {/* Input Footer */}
+                    <div className="bg-white border border-slate-200 rounded-b-3xl p-4 shadow-sm">
+                        <form onSubmit={handleSend} className="relative flex items-center">
+                            <input 
+                                type="text" 
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Ask Nexus anything..."
+                                className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-5 pr-14 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 placeholder:text-slate-400 shadow-inner"
+                            />
+                            <button 
+                                type="submit"
+                                disabled={!input.trim() || isTyping}
+                                className="absolute right-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white p-2.5 rounded-xl transition-all shadow-md active:scale-95"
+                            >
+                                <Icon name="send" size={20} />
+                            </button>
+                        </form>
+                        <div className="flex justify-center mt-3">
+                            <p className="text-[10px] text-slate-400 flex items-center gap-1 font-medium">
+                                <Icon name="shield-check" size={10} />
+                                ENCRYPTED SECURE AI SESSION
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ChatApp />);
+    </script>
+</body>
+</html>
