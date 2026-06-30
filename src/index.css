@@ -1,0 +1,87 @@
+:root {
+  --bg: #07080f;
+  --surface: #0e1120;
+  --card: #141728;
+  --card2: #1a1f35;
+  --border: #1e2340;
+  --border2: #252b4a;
+  --accent: #4f6ef7;
+  --accent2: #7c3aed;
+  --accent3: #06b6d4;
+  --glow: rgba(79, 110, 247, 0.35);
+  --glow2: rgba(124, 58, 237, 0.25);
+  --text: #e8eaf6;
+  --text2: #a8b0d0;
+  --muted: #5a6380;
+  --danger: #ef4444;
+  --danger-soft: rgba(239, 68, 68, 0.15);
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --online: #22c55e;
+  --away: #f59e0b;
+  --msg-me: #1b2660;
+  --msg-me-border: rgba(79, 110, 247, 0.3);
+  --msg-them: #141728;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
+  --transition: 0.18s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root { height: 100%; font-size: 15px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
+*::-webkit-scrollbar { width: 4px; height: 4px; }
+*::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-5px); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--glow); }
+  50% { box-shadow: 0 0 40px var(--glow), 0 0 60px var(--glow2); }
+}
