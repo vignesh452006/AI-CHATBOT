@@ -1,0 +1,74 @@
+{
+  "name": "FoodProduct",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Biryani",
+        "Pizza",
+        "Burger",
+        "Chinese",
+        "South Indian",
+        "North Indian",
+        "Desserts",
+        "Beverages",
+        "Pasta",
+        "Salads",
+        "Wraps & Rolls",
+        "Seafood",
+        "Grills & BBQ",
+        "Sandwiches",
+        "Soups",
+        "Breakfast",
+        "Ice Cream",
+        "Juice & Shakes",
+        "Snacks",
+        "Thali"
+      ]
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "is_veg": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_popular": {
+      "type": "boolean",
+      "default": false
+    },
+    "rating": {
+      "type": "number",
+      "default": 4.0
+    },
+    "spice_level": {
+      "type": "string",
+      "enum": [
+        "Mild",
+        "Medium",
+        "Spicy",
+        "Extra Spicy"
+      ],
+      "default": "Medium"
+    },
+    "prep_time": {
+      "type": "string",
+      "default": "20 min"
+    }
+  },
+  "required": [
+    "name",
+    "price",
+    "category"
+  ]
+}
